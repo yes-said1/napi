@@ -16,6 +16,12 @@ export const registerAdmin = async (req, res) => {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/.test(password)) {
+  return res.status(400).json({
+    message: "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character."
+  });
+}
+
     // Save admin
     const newAdmin = new Admin({
       name,
