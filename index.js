@@ -8,27 +8,13 @@ import adminRoutes from "./routes/admin.route.js";
 dotenv.config();
 const app = express();
 
-// Allow multiple frontend origins (local + Vercel + custom domain)
-const allowedOrigins = (process.env.CLIENT_URLS || "")
-  .split(",")
-  .map(origin => origin.trim())
-  .filter(Boolean);
-
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin (e.g., mobile apps, curl)
-      if (!origin || allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-      return callback(new Error("Not allowed by CORS"));
-    },
-    credentials: true, // Allow cookies to be sent
-  })
-);
+app.use(cookieParser()); // Enables reading cookies from requests
+app.use(cors({
+  origin: 'https://nancybosiboricv.vercel.app/', // React frontend URL
+  credentials: true                // Allow cookies to be sent with requests
+}));
 
 app.use(express.json());
-app.use(cookieParser());
 
 // MongoDB connection
 mongoose
