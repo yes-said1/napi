@@ -2,15 +2,15 @@ import Admin from "../models/admin.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-// Register Admin
+// Register Admin - Only allow ONE superadmin
 export const registerAdmin = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    // Check if admin exists
-    const existingAdmin = await Admin.findOne({ email });
+    // Check if ANY admin already exists
+    const existingAdmin = await Admin.findOne();
     if (existingAdmin) {
-      return res.status(400).json({ message: "Admin already exists" });
+      return res.status(403).json({ message: "Superadmin already exists. Registration is closed." });
     }
 
     // Hash password
@@ -21,10 +21,11 @@ export const registerAdmin = async (req, res) => {
       name,
       email,
       password: hashedPassword,
+      role: "superadmin", // optional: mark the role explicitly
     });
 
     await newAdmin.save();
-    res.status(201).json({ message: "Admin registered successfully" });
+    res.status(201).json({ message: "Superadmin registered successfully" });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
