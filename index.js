@@ -10,7 +10,7 @@ const app = express();
 
 app.use(cookieParser()); // Enables reading cookies from requests
 app.use(cors({
-  origin: 'https://nancybosiboricv.vercel.app/', // React frontend URL
+  origin: 'https://nancybosiboricv.vercel.app', // React frontend URL
   credentials: true                // Allow cookies to be sent with requests
 }));
 
