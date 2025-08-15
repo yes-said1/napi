@@ -40,7 +40,7 @@ mongoose
 app.use("/api/admin", adminRoutes);
 
 // Health check route for Render uptime monitoring
-app.get("/health", (req, res) => {
+app.get("/", (req, res) => {
   res.json({ status: "ok" });
 });
 
