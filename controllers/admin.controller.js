@@ -61,9 +61,16 @@ export const loginAdmin = async (req, res) => {
       { expiresIn: "1d" }
     );
 
+    // ✅ Send token in HttpOnly cookie
+    res.cookie("adminToken", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // use HTTPS in production
+      sameSite: "strict",
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
+    });
+
     res.status(200).json({
       message: "Login successful",
-      token,
       admin: { id: admin._id, name: admin.name, email: admin.email },
     });
   } catch (error) {
