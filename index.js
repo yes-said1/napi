@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import adminRoutes from "./routes/admin.route.js";
+import contactRoutes from "./routes/contact.route.js";  
 
 dotenv.config();
 const app = express();
@@ -24,6 +25,7 @@ mongoose
 
 // Routes
 app.use("/api/admin", adminRoutes);
+app.use("/api/contacts", contactRoutes);  
 
 // Health check route for Render uptime monitoring
 app.get("/", (req, res) => {
