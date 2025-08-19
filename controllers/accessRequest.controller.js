@@ -55,3 +55,13 @@ export const approveRequest = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
+// Get all access requests
+export const getAllRequests = async (req, res) => {
+  try {
+    const requests = await AccessRequest.find().sort({ createdAt: -1 });
+    res.status(200).json(requests);
+  } catch (error) {
+    console.error("Error fetching requests:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};

@@ -24,7 +24,7 @@ export const createContact = async (req, res) => {
 export const getContacts = async (req, res) => {
   try {
     const contacts = await Contact.find().sort({ createdAt: -1 });
-    res.status(200).json({ contacts });
+    res.status(200).json(contacts); // return array instead of { contacts }
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
