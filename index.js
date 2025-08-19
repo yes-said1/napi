@@ -1,10 +1,11 @@
-import express from "express";
+import express, { request } from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import adminRoutes from "./routes/admin.route.js";
-import contactRoutes from "./routes/contact.route.js";  
+import contactRoutes from "./routes/contact.route.js"; 
+import accessRequestRoutes from "./routes/accessRequest.route.js";
 
 dotenv.config();
 const app = express();
@@ -26,6 +27,7 @@ mongoose
 // Routes
 app.use("/api/admin", adminRoutes);
 app.use("/api/contacts", contactRoutes);  
+app.use("/api", accessRequestRoutes);  // <--- Mount routes
 
 // Health check route for Render uptime monitoring
 app.get("/", (req, res) => {
