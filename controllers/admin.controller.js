@@ -61,11 +61,11 @@ export const loginAdmin = async (req, res) => {
       { expiresIn: "1d" }
     );
 
-    // ✅ Send token in HttpOnly cookie
+    // Send token in HttpOnly cookie
     res.cookie("adminToken", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // use HTTPS in production
-      sameSite: "strict",
+      sameSite: "none",
       maxAge: 24 * 60 * 60 * 1000, // 1 day
     });
 
