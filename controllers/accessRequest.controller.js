@@ -10,7 +10,27 @@ export const createRequest = async (req, res) => {
 
     const newRequest = new AccessRequest({ name, email, reason });
     await newRequest.save();
+ // --- Send email notification to admin ---
+    const transporter = nodemailer.createTransport({
+      service: "gmail", // You can also use "smtp"
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
 
+    await transporter.sendMail({
+      from: `"CV Access System" <${process.env.EMAIL_USER}>`,
+      to: process.env.ADMIN_EMAIL, // notify admin
+      subject: "New Access Request Submitted",
+      html: `
+        <h2>New CV Access Request</h2>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Reason:</strong> ${reason}</p>
+        <p>Login to your admin dashboard to approve or reject this request.</p>
+      `,
+    });
     res.status(201).json({ success: true, requestId: newRequest._id });
   } catch (error) {
     console.error("Error creating request:", error);
