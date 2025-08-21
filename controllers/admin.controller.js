@@ -10,17 +10,23 @@ export const registerAdmin = async (req, res) => {
     // Check if ANY admin already exists
     const existingAdmin = await Admin.findOne();
     if (existingAdmin) {
-      return res.status(403).json({ message: "Superadmin already exists. Registration is closed." });
+      return res
+        .status(403)
+        .json({ message: "Superadmin already exists. Registration is closed." });
+    }
+
+    // Password strength check
+    if (
+      !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/.test(password)
+    ) {
+      return res.status(400).json({
+        message:
+          "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.",
+      });
     }
 
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/.test(password)) {
-  return res.status(400).json({
-    message: "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character."
-  });
-}
 
     // Save admin
     const newAdmin = new Admin({
@@ -64,8 +70,8 @@ export const loginAdmin = async (req, res) => {
     // Send token in HttpOnly cookie
     res.cookie("adminToken", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // use HTTPS in production
-      sameSite: "none",
+      secure: process.env.NODE_ENV === "production", // only true in production
+      sameSite: "none", // allow cross-site
       maxAge: 24 * 60 * 60 * 1000, // 1 day
     });
 
@@ -75,5 +81,27 @@ export const loginAdmin = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+// Get Admin Profile
+export const getAdminProfile = async (req, res) => {
+  try {
+    // req.admin is added in verifyAdmin middleware
+    const admin = await Admin.findById(req.admin.id).select("name email role");
+    if (!admin) {
+      return res.status(404).json({ success: false, message: "Admin not found" });
+    }
+
+    res.json({
+      success: true,
+      id: admin._id,
+      name: admin.name,
+      email: admin.email,
+      role: admin.role,
+    });
+  } catch (err) {
+    console.error("Profile fetch error:", err);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
