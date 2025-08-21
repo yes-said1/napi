@@ -1,5 +1,5 @@
 import AccessRequest from "../models/AccessRequest.model.js";
-// Submit access request
+import nodemailer from "nodemailer";
 export const createRequest = async (req, res) => {
   try {
     const { name, email, reason } = req.body;
