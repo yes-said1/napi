@@ -12,7 +12,7 @@ export const createRequest = async (req, res) => {
     await newRequest.save();
  // --- Send email notification to admin ---
     const transporter = nodemailer.createTransport({
-      service: "gmail", // You can also use "smtp"
+      service: "gmail", 
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
