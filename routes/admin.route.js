@@ -7,6 +7,13 @@ const router = express.Router();
 router.post("/register", registerAdmin);
 router.post("/login", loginAdmin);
 router.post("/logout", logoutAdmin); 
-router.get("/profile", verifyAdmin, getAdminProfile); 
+
+// Get admin profile (protected)
+router.get("/profile", verifyAdmin, getAdminProfile);
+
+// Auth check route (for ProtectedRoute)
+router.get("/check-auth", verifyAdmin, (req, res) => {
+  res.json({ success: true, message: "Authenticated", admin: req.admin });
+});
 
 export default router;
