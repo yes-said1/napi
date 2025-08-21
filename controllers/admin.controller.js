@@ -105,3 +105,17 @@ export const getAdminProfile = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
+// Logout Admin
+export const logoutAdmin = async (req, res) => {
+  try {
+    res.clearCookie("adminToken", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "none",
+    });
+
+    res.status(200).json({ message: "Logout successful" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
